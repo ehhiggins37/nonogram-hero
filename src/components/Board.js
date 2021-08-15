@@ -6,6 +6,7 @@ export default class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      squares: Array(25).fill(null),
       mistakes: 0,
       puzzle: Array(25).fill(false),
       guesses: Array(25).fill(false)
@@ -35,6 +36,7 @@ export default class Board extends React.Component {
   handleClick(event, row, column) {
     console.log(this.state)
     let i = this.toIndex(row, column)
+    let squares = this.state.squares
 
     // if there is no guess at index
     if (!this.state.guesses[i]) {
@@ -43,23 +45,24 @@ export default class Board extends React.Component {
 
     //if left click
       if (event.button === 0) {
-        console.log('made it to left click')
         if (this.state.puzzle[i]) {
-          console.log('should change guess')
           guesses[i] = 'o'
+          squares[i] = '\u25A9'
+          this.setState({squares: squares})
         } else {
           guesses[i] = 'x'
+          squares[i] = 'x'
           this.setState({mistakes: mistakes+1})
-          console.log('should be a mistake')
         }
       // if right click
       } else if (event.button === 2) {
-        console.log('made it to right click')
         event.preventDefault();
         if (!this.state.puzzle[i]) {
           guesses[i] = 'o'
+          squares[i] = 'x'
         } else {
           guesses[i] = 'x'
+          squares[i] = '\u25A9'
           this.setState({mistakes: mistakes+1})
         }
       }
@@ -70,7 +73,16 @@ export default class Board extends React.Component {
     evt.preventDefault();
     this.newPuzzle()
   }
-    //   "\u25A9";
+
+  // handleClick(i) {
+  //   const squares = this.state.squares.slice();
+    // console.log(i)
+    // squares[i] = "\u25A9";
+    //   this.setState({squares: squares})
+    // if (evt.type === 'click') {
+    //   console.log('click')
+    //   squares[i] = "\u25A9";
+
 
   render() {
     const { handleClick, handleSubmit } = this
