@@ -1,16 +1,11 @@
 import React from 'react';
+// import Board from '../components/Board'
+import Game from '../components/Game'
 
 const Play = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'Right',
-        alignItems: 'Right',
-        height: '100vh'
-      }}
-    >
-      <h1>Let's play.</h1>
+    <div>
+      <Game />
     </div>
   );
 };
