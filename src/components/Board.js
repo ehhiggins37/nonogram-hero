@@ -1,6 +1,5 @@
 import React from 'react';
 import Square from './Square'
-import Clues from './Clues'
 
 export default class Board extends React.Component {
   constructor(props) {
@@ -74,38 +73,56 @@ export default class Board extends React.Component {
     this.newPuzzle()
   }
 
+  createCluesRow(row) {
+    return 1
+    // console.log(row)
+    let rowArr = []
+
+    for (let i = 0; i < 5; i++){
+      rowArr.push(this.state.puzzle[row + i])
+    }
+    // console.log(rowArr)
+    let clueArr = [];
+    let counter = 0;
+
+    for (let j = 0; j < 5; j++) {
+      if (rowArr[j] === true) {
+        // console.log(rowArr[j])
+        counter++
+
+      } else {
+        clueArr.push(counter)
+        counter = 0
+      }
+
+      // console.log (clueArr)
+      return clueArr
+    }
+  }
+
   render() {
     const { handleClick, handleSubmit } = this
     let rows = [(
-      <tr key={0}>
+      <tr key={0} className="column">
         <td></td>
-        { Array.from(Array(5), (_, column) => (
-          <Clues
-            key={'cc' + column}
-            orientation = 'columns'
-            index={column}
-            puzzle={this.props.puzzle}
-            guesses={this.props.guesses}
-            />
-        ))
-        }
+        {Array.from(Array(5), () => 1)}
       </tr>
     )]
 
     for (let row = 0; row < 5; row++) {
       rows.push(
         <tr key={row + 1}>
-          <Clues
+          {this.createCluesRow(row)}
+          {/* <Clues
             key={'cr' + row}
             orientation='row'
             index={row}
             puzzle={this.props.puzzle}
             guesses={this.props.guesses}
-          />
+          /> */}
           { Array.from(Array(5), (_, column) => (
               <Square
                 key={row + ',' + column}
-                box={this.state.puzzle[this.toIndex(row, column)]}
                 guess={this.state.guesses[this.toIndex(row, column)]}
                 onClick={(event) => handleClick(event, row, column)}
                 onContextMenu={(event) => handleClick(event, row, column)}
@@ -129,6 +146,7 @@ export default class Board extends React.Component {
           <button className="newGameButton" onClick={handleSubmit}>
             New Game
           </button>
+          <br />
           Mistakes: {this.state.mistakes}
         </div>
       </div>

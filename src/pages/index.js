@@ -2,7 +2,12 @@ import React from 'react';
 import logo from '../nonogram-hero.png';
 
 
-const Home = () => {
+export default class Home extends React.Component {
+  handleClick() {
+    console.log('handle click')
+    return
+  }
+  render(){
   return (
     <div>
       <div className="App">
@@ -11,10 +16,12 @@ const Home = () => {
       <p>
         Let's get started.
       </p>
+      <button onClick={this.handleClick}>
+        Download me here!
+      </button>
       </header>
       </div>
     </div>
   );
+  }
 };
-
-export default Home;
