@@ -74,16 +74,6 @@ export default class Board extends React.Component {
     this.newPuzzle()
   }
 
-  // handleClick(i) {
-  //   const squares = this.state.squares.slice();
-    // console.log(i)
-    // squares[i] = "\u25A9";
-    //   this.setState({squares: squares})
-    // if (evt.type === 'click') {
-    //   console.log('click')
-    //   squares[i] = "\u25A9";
-
-
   render() {
     const { handleClick, handleSubmit } = this
     let rows = [(
@@ -119,6 +109,7 @@ export default class Board extends React.Component {
                 guess={this.state.guesses[this.toIndex(row, column)]}
                 onClick={(event) => handleClick(event, row, column)}
                 onContextMenu={(event) => handleClick(event, row, column)}
+                value={this.state.squares[row * 5 + column]}
               />
             ))
           }
