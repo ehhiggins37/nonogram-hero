@@ -1,5 +1,5 @@
-import React from 'react';
-import Square from './Square'
+import React from "react";
+import Square from "./Square";
 
 export default class Board extends React.Component {
   constructor(props) {
@@ -8,128 +8,130 @@ export default class Board extends React.Component {
       squares: Array(25).fill(null),
       mistakes: 0,
       puzzle: Array(25).fill(false),
-      guesses: Array(25).fill(false)
-    }
+      guesses: Array(25).fill(false),
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
-    this.newPuzzle()
+    this.newPuzzle();
   }
 
   toIndex(row, column) {
-    return row * 5 + column
+    return row * 5 + column;
   }
 
   newPuzzle() {
     // console.log('new game')
-    let mistakes = this.state.mistakes
-    let puzzle = this.state.puzzle
-    let guesses = this.state.guesses
-    this.setState({mistakes: 0});
-    this.setState({puzzle: (Array.from(Array(25), () => Math.random(1)<0.5))});
-    this.setState({guesses: (Array.from(Array(25).fill(false)))})
+    let mistakes = this.state.mistakes;
+    let puzzle = this.state.puzzle;
+    let guesses = this.state.guesses;
+    this.setState({ mistakes: 0 });
+    this.setState({
+      puzzle: Array.from(Array(25), () => Math.random(1) < 0.5),
+    });
+    this.setState({ guesses: Array.from(Array(25).fill(false)) });
   }
 
   handleClick(event, row, column) {
-    console.log(this.state)
-    let i = this.toIndex(row, column)
-    let squares = this.state.squares
+    console.log(this.state);
+    let i = this.toIndex(row, column);
+    let squares = this.state.squares;
 
     // if there is no guess at index
     if (!this.state.guesses[i]) {
-      let guesses = this.state.guesses
-      let mistakes = this.state.mistakes
+      let guesses = this.state.guesses;
+      let mistakes = this.state.mistakes;
 
-    //if left click
+      //if left click
       if (event.button === 0) {
         if (this.state.puzzle[i]) {
-          guesses[i] = 'o'
-          squares[i] = '\u25A9'
-          this.setState({squares: squares})
+          guesses[i] = "o";
+          squares[i] = "\u25A9";
+          this.setState({ squares: squares });
         } else {
-          guesses[i] = 'x'
-          squares[i] = 'x'
-          this.setState({mistakes: mistakes+1})
+          guesses[i] = "x";
+          squares[i] = "x";
+          this.setState({ mistakes: mistakes + 1 });
         }
-      // if right click
+        // if right click
       } else if (event.button === 2) {
         event.preventDefault();
         if (!this.state.puzzle[i]) {
-          guesses[i] = 'o'
-          squares[i] = 'x'
+          guesses[i] = "o";
+          squares[i] = "x";
         } else {
-          guesses[i] = 'x'
-          squares[i] = '\u25A9'
-          this.setState({mistakes: mistakes+1})
+          guesses[i] = "x";
+          squares[i] = "\u25A9";
+          this.setState({ mistakes: mistakes + 1 });
         }
       }
     }
-}
+  }
 
   handleSubmit(evt) {
     evt.preventDefault();
-    this.newPuzzle()
+    this.newPuzzle();
   }
 
   createCluesRow(row) {
-    return 1
-    // console.log(row)
-    let rowArr = []
+    let rowArr = [];
 
-    for (let i = 0; i < 5; i++){
-      rowArr.push(this.state.puzzle[row + i])
+    for (let i = 0; i < 5; i++) {
+      rowArr.push(this.state.puzzle[i + row * 5]);
     }
-    // console.log(rowArr)
+
     let clueArr = [];
     let counter = 0;
 
     for (let j = 0; j < 5; j++) {
       if (rowArr[j] === true) {
-        // console.log(rowArr[j])
-        counter++
-
+        counter++;
+        if (j !== 4) {
+          continue;
+        } else {
+          clueArr.push(counter);
+        }
       } else {
-        clueArr.push(counter)
-        counter = 0
-      }
+        if (j !== 4) {
+          if (counter !== 0) {
+            clueArr.push(counter);
+            counter = 0;
+          }
+            continue;
 
-      // console.log (clueArr)
-      return clueArr
+        } else {
+          clueArr.push(counter);
+        }
+      }
+      console.log(clueArr);
+      return clueArr;
     }
   }
 
   render() {
-    const { handleClick, handleSubmit } = this
-    let rows = [(
+    const { handleClick, handleSubmit } = this;
+    let rows = [
       <tr key={0} className="column">
         <td></td>
         {Array.from(Array(5), () => 1)}
-      </tr>
-    )]
+      </tr>,
+    ];
 
     for (let row = 0; row < 5; row++) {
       rows.push(
         <tr key={row + 1}>
           {this.createCluesRow(row)}
-          {/* <Clues
-            key={'cr' + row}
-            orientation='row'
-            index={row}
-            puzzle={this.props.puzzle}
-            guesses={this.props.guesses}
-          /> */}
-          { Array.from(Array(5), (_, column) => (
-              <Square
-                key={row + ',' + column}
-                guess={this.state.guesses[this.toIndex(row, column)]}
-                onClick={(event) => handleClick(event, row, column)}
-                onContextMenu={(event) => handleClick(event, row, column)}
-                value={this.state.squares[row * 5 + column]}
-              />
-            ))
-          }
+          {Array.from(Array(5), (_, column) => (
+            <Square
+              key={row + "," + column}
+              guess={this.state.guesses[this.toIndex(row, column)]}
+              onClick={(event) => handleClick(event, row, column)}
+              onContextMenu={(event) => handleClick(event, row, column)}
+              value={this.state.squares[row * 5 + column]}
+            />
+          ))}
         </tr>
       );
     }
@@ -137,9 +139,7 @@ export default class Board extends React.Component {
       <div>
         <div>
           <table className="puzzle">
-            <tbody>
-              {rows}
-            </tbody>
+            <tbody>{rows}</tbody>
           </table>
         </div>
         <div>
@@ -150,6 +150,6 @@ export default class Board extends React.Component {
           Mistakes: {this.state.mistakes}
         </div>
       </div>
-    )
+    );
   }
 }
